@@ -10,29 +10,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Root Route (for checking backend)
+// Root route
 app.get("/", (req, res) => {
   res.send("RBAC Backend API Running Successfully 🚀");
 });
 
-// Import Routes
+// Import routes
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const adminRoutes = require("./routes/admin");
 
-// Use Routes
-app.use("/api", authRoutes);
-app.use("/api", userRoutes);
+// Use routes
+app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/admin", adminRoutes);
 
-// Connect MongoDB
+// MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-// Start Server
+// Server start
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
