@@ -6,8 +6,14 @@ require("dotenv").config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+//middleware
+app.use(
+  cors({
+    origin: "https://cozy-croquembouche-084859.netlify.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Root route
