@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -6,40 +5,33 @@ require("dotenv").config();
 
 const app = express();
 
-//middleware
-app.use(
-  cors({
-    origin: "https://cozy-croquembouche-084859.netlify.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// ✅ CORS FIX (IMPORTANT)
+app.use(cors({
+  origin: "https://cozy-croquembouche-084859.netlify.app",
+  credentials: true
+}));
+
+// ✅ Middleware
 app.use(express.json());
 
-// Root route
+// ✅ Routes
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);
+
+// ✅ Test route
 app.get("/", (req, res) => {
   res.send("RBAC Backend API Running Successfully 🚀");
 });
 
-// Import routes
-const authRoutes = require("./routes/authRoutes");
-const taskRoutes = require("./routes/taskRoutes");
-const adminRoutes = require("./routes/admin");
-
-// Use routes
-app.use("/api/auth", authRoutes);
-app.use("/api/tasks", taskRoutes);
-app.use("/api/admin", adminRoutes);
-
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
+// ✅ MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected ✅"))
   .catch((err) => console.log(err));
 
-// Server start
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
