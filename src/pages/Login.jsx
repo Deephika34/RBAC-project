@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
@@ -11,15 +12,14 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await API.post("/login", {
+      const res = await API.post("/auth/login", {
         email: email,
         password: password,
       });
 
-      // Save token in localStorage
+      // Save token and role
       localStorage.setItem("token", res.data.token);
-localStorage.setItem("role", res.data.user.role.name);
-
+      localStorage.setItem("role", res.data.role);
 
       alert("Login successful");
       navigate("/dashboard");
