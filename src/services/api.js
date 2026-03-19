@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: "https://rbac-backend-s5lz.onrender.com/api",
 });
 
 // Add token automatically
