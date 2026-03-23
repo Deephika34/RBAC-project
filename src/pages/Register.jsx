@@ -1,67 +1,100 @@
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import API from "../services/api";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const handleRegister = async (e) => {
+  const [loading, setLoading] = useState(false);
+
+  // input change handle
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // form submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register Clicked")
+    console.log(formData);
+    setLoading(true);
 
     try {
-      await API.post("/api/auth/register", {
-        name: name,
-        email: email,
-        password: password,
+      // ✅ CORRECT API ROUTE
+      const res = await API.post("/auth/register", formData);
+      console.log("Response:", res.data);
+      alert("✅ Registration Successful");
+
+      // clear form
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
       });
 
-      alert("Registration successful");
-      navigate("/");
+    } catch (err) {
+      console.error("Error:", err.response?.data || err.message);
 
-    } catch (error) {
-      console.error("Register error:", error);
-      alert("Registration failed");
+      alert(
+        err.response?.data?.message || "❌ Registration Failed"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Register Page</h2>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <h2>Register</h2>
 
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <br /><br />
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br /><br />
+        <br />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <br /><br />
+        <div>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <button type="submit">Register</button>
+        <br />
+
+        <div>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <br />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
       </form>
     </div>
   );

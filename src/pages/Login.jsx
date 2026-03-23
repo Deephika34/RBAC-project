@@ -1,56 +1,76 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await API.post("/api/auth/login", {
-        email: email,
-        password: password,
-      });
+      console.log("Sending login data:", formData);
 
-      // Save token and role
+      // ✅ CORRECT API CALL
+      const res = await API.post("/auth/login", formData);
+
+      console.log("Login Response:", res.data);
+
+      // ✅ Save token & role
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
 
-      alert("Login successful");
+      alert("✅ Login successful");
+
+      // ✅ Redirect
       navigate("/dashboard");
 
     } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed");
+      console.error("Login error:", error.response?.data || error.message);
+
+      alert(
+        error.response?.data?.message || "❌ Login failed"
+      );
     }
   };
 
   return (
-    <div>
-      <h2>Login Page</h2>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <h2>Login</h2>
 
       <form onSubmit={handleLogin}>
         <input
           type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          placeholder="Enter Email"
+          value={formData.email}
+          onChange={handleChange}
           required
         />
+
         <br /><br />
 
         <input
           type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          placeholder="Enter Password"
+          value={formData.password}
+          onChange={handleChange}
           required
         />
+
         <br /><br />
 
         <button type="submit">Login</button>

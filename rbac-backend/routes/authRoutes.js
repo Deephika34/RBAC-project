@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-// REGISTER
+// ================= REGISTER =================
 router.post("/register", async (req, res) => {
   try {
     console.log("🔥 Register route hit");
@@ -15,10 +15,9 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // temporary response (DB logic later add pannalam)
+    // ✅ Temporary success response
     res.status(200).json({
-      message: "User registered successfully",
-      user: { name, email }
+      message: "Register successful"
     });
 
   } catch (error) {
@@ -29,7 +28,8 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// LOGIN
+
+// ================= LOGIN =================
 router.post("/login", async (req, res) => {
   try {
     console.log("🔥 Login route hit");
@@ -43,8 +43,11 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    // ✅ IMPORTANT: send token & role
     res.status(200).json({
-      message: "Login successful"
+      message: "Login successful",
+      token: "dummy-token-123",
+      role: "user"   // later DB la irundhu varum
     });
 
   } catch (error) {

@@ -1,13 +1,13 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
 
 // ✅ CORS FIX (IMPORTANT)
 app.use(cors({
-  origin: "https://cozy-croquembouche-084859.netlify.app",
+  origin: ["http://localhost:5173", "https://cozy-croquembouche-084859.netlify.app"],
   credentials: true
 }));
 
@@ -32,6 +32,5 @@ mongoose.connect(process.env.MONGO_URI)
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT} 🚀`);
 });
-

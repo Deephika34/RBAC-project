@@ -1,26 +1,21 @@
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 
 function Dashboard() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-
-  let role = "";
-
-  if (token) {
-    const decoded = jwtDecode(token);
-    role = decoded.role;
-  }
+  const role = localStorage.getItem("role"); // ✅ direct read
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
     alert("Logged out successfully");
     navigate("/");
   };
 
   return (
-    <div>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h2>Dashboard Page</h2>
 
       <p>Welcome! You are logged in.</p>
